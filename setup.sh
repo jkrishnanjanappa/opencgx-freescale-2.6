@@ -56,6 +56,7 @@ LAYER@https://github.com/MontaVista-OpenSourceTechnology/meta-freescale.git;bran
 MACHINE@ls1043ardb \
 DISTRO@mvista-cgx \
 CONFIG@EXTRA_IMAGEDEPENDS_remove_ls1043ardb=atf \
+CONFIG@ACCEPT_FSL_EULA=1 \
 "
 TOPDIR=$(dirname $THIS_SCRIPT)
 buildtar=""
