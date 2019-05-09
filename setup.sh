@@ -27,6 +27,10 @@ fi
 mkdir -p $buildDir
 buildDir=$(readlink -f $buildDir)
 
+if [ -z "$MACHINE" ] ; then
+    MACHINE="ls1043ardb"
+fi
+
 REPO_CONFIG="\
 LAYER@https://github.com/MontaVista-OpenSourceTechnology/poky.git;branch=thud;layer=meta \
 LAYER@https://github.com/MontaVista-OpenSourceTechnology/poky.git;branch=thud;layer=meta-poky \
@@ -48,12 +52,12 @@ LAYER@https://github.com/MontaVista-OpenSourceTechnology/meta-openembedded.git;b
 LAYER@https://github.com/MontaVista-OpenSourceTechnology/meta-openembedded.git;branch=thud;layer=meta-xfce \
 LAYER@https://github.com/MontaVista-OpenSourceTechnology/meta-selinux.git;branch=thud \
 LAYER@https://github.com/MontaVista-OpenSourceTechnology/meta-security.git;branch=thud \
-LAYER@https://github.com/MontaVista-OpenSourceTechnology/meta-cgl.git;branch=master;layer=meta-cgl-common \
+LAYER@https://github.com/MontaVista-OpenSourceTechnology/meta-cgl.git;branch=thud;layer=meta-cgl-common \
 LAYER@https://github.com/MontaVista-OpenSourceTechnology/meta-cloud-services.git;branch=thud \
 LAYER@https://github.com/MontaVista-OpenSourceTechnology/meta-cloud-services.git;branch=thud;layer=meta-openstack \
 LAYER@https://github.com/MontaVista-OpenSourceTechnology/meta-montavista-cgl.git;branch=thud \
 LAYER@https://github.com/MontaVista-OpenSourceTechnology/meta-freescale.git;branch=thud \
-MACHINE@ls1043ardb \
+MACHINE@$MACHINE \
 DISTRO@mvista-cgx \
 CONFIG@EXTRA_IMAGEDEPENDS_remove_ls1043ardb=atf \
 CONFIG@ACCEPT_FSL_EULA=1 \
@@ -138,6 +142,12 @@ if [ -e $TOPDIR/.drop -o "$MAKEDROP" = "1" ] ; then
 fi
 echo "# Do not modify, automatically generated" > conf/local-content.conf
 echo >> conf/local-content.conf
+
+if [ "$MACHINE" = "imx8mmevk" ] ; then
+    echo "PREFERRED_PROVIDER_virtual/kernel ?= 'linux-imx'" >> conf/local-content.conf
+    echo "DISTRO_FEATURES_append += 'wayland'" >> conf/local-content.conf
+    echo "PREFERRED_PROVIDER_cryptodev-linux = 'cryptodev-qoriq-linux'" >> conf/local-content.conf
+fi
 
 for config in $REPO_CONFIG; do
     VAR=$(echo $config | cut -d @ -f 1)
