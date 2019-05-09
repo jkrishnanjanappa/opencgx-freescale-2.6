@@ -142,12 +142,6 @@ fi
 echo "# Do not modify, automatically generated" > conf/local-content.conf
 echo >> conf/local-content.conf
 
-if [ "$MACHINE" = "imx8mmevk" ] ; then
-    echo "PREFERRED_PROVIDER_virtual/kernel ?= 'linux-imx'" >> conf/local-content.conf
-    echo "DISTRO_FEATURES_append += 'wayland'" >> conf/local-content.conf
-    echo "PREFERRED_PROVIDER_cryptodev-linux = 'cryptodev-qoriq-linux'" >> conf/local-content.conf
-fi
-
 for config in $REPO_CONFIG; do
     VAR=$(echo $config | cut -d @ -f 1)
     VAL=$(echo $config | cut -d @ -f 2)
